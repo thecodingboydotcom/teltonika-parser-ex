@@ -236,7 +236,10 @@ class Codec8e extends Codec {
     for (var i = 0; i < ioCountIntX; i++) {
       let property_id = this.toInt(this.reader.ReadBytes(2));
       let ioValueLength = this.toInt(this.reader.ReadBytes(2));
-      let value = this.toString(this.reader.ReadBytes(ioValueLength));
+      //let value = this.toString(this.reader.ReadBytes(ioValueLength));
+      //Special handling has been implemented for crash trace data.
+      let value = (property_id == 257) ? (this.reader.ReadBytes(ioValueLength)) : this.toString(this.reader.ReadBytes(ioValueLength));
+      
       ioElement.push({
         id: property_id,
         value: value,
@@ -641,7 +644,9 @@ class Codec8e extends Codec {
       256: {
         label: 'VIN',
       },
-
+      257: {
+        label: 'Crash trace data',
+      },
       281: {
         label: 'fault codes',
       },
